@@ -677,8 +677,7 @@ class Kartta:
           
                     
     def suuntval(self, xa=-1, ya=-1):
-        luk = luk+1
-        logtie.write(str(xa)+str(ya)+'kert:'+str(luk)+'  '+'suuntval\n')
+        logtie.write(str(xa)+str(ya)+'suuntval\n')
         xm = self.xkok-1
         ym = self.ykok-1
         valmat = []
@@ -885,8 +884,6 @@ def tutki(kaupma):
         
 log='log.txt'
 logtie=open(log, 'w')
-global luk
-luk = 0
 for i in range(1):
     suoritus(6)
     
