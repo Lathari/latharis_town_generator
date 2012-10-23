@@ -1,0 +1,1 @@
+Creates a district list and a map. Map also as a file. change argument of suoritus() from 6 to 4 for a usable run... also it's in Finnish
