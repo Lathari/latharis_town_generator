@@ -222,7 +222,7 @@ class Kaupunki:
                            "Theater district", "Undercity",
                            "Warehouse district", "Waterfront district"]
             
-            self.matalamaarat = [4, 22, 12, 10, 8, 4, 2, 12, 9, 2, 4, 12, 1]
+            self.matalamaarat = [4, 22, 12, 10, 8, 4, 2, 12, 9, 2, 4, 10, 1]
 
             self.normaalimaarat = [1, 12, 2, 14, 2, 5, 10, 2, 4, 2, 2]
 
@@ -551,34 +551,42 @@ class Kartta:
     def torit(self):
         logtie.write('torit\n')
         if len(self.aluli[20])==0:return None
-        else:
-            merlist=[]
-            mahdlist=[]
-            torilist=[]
-            summat=[]
-            todtest=0
+        
+        merlist=[]
+        mahdlist=[]
+        torilist=[]
+        summat=[]
+        todtest=0
+        self.tyhjät()
+        self.karli()
+        escape=0
+        for i in range(len(self.karttalist)):
+            if self.karttalist[i][2].tyyppinum == 99: merlist.append([self.karttalist[i][0],self.karttalist[i][1]])
+        for i in range(len(self.tyhjälist)):    
+            for j in range(len(merlist)):
+                summat.append([math.sqrt((merlist[j][0]-self.tyhjälist[i][0])**2+(merlist[j][1]-self.tyhjälist[i][1])**2),i])
+        for i in range(len(summat)):
+            if 1<summat[i][0]<3:
+                mahdlist.append(self.tyhjälist[summat[i][1]])
+        torilist.append(mahdlist[random.randint(0,len(mahdlist)-1)])
+        for i in range(len(self.aluli[20])):
+            logtie.write('tyhmtor')
             self.tyhjät()
-            self.karli()
-            for i in range(len(self.karttalist)):
-                if self.karttalist[i][2].tyyppinum == 99: merlist.append([self.karttalist[i][0],self.karttalist[i][1]])
-            for i in range(len(self.tyhjälist)):    
-                for j in range(len(merlist)):
-                    summat.append([math.sqrt((merlist[j][0]-self.tyhjälist[i][0])**2+(merlist[j][1]-self.tyhjälist[i][1])**2),i])
-            for i in range(len(summat)):
-                if 1<summat[i][0]<3:
-                    mahdlist.append(self.tyhjälist[summat[i][1]])
+            for i in range(len(self.tyhjälist)):
+                for j in range(len(torilist)):
+                    if 4<math.sqrt((torilist[j][0]-self.tyhjälist[i][0])**2+(torilist[j][1]-self.tyhjälist[i][1])**2)<12:
+                        mahdlist.append(self.tyhjälist[i])
+            if mahdlist == []:
+                        
+                s =random.randint(0, len(self.tyhjälist)-1)
+                mahdlist.append(self.tyhjälist[s][0],self.tyhjälist[s][1])
+                    
             torilist.append(mahdlist[random.randint(0,len(mahdlist)-1)])
-            while len(torilist)<=len(self.aluli[20])//2:
-                logtie.write('tyhmtor')
-                self.tyhjät()
-                for i in range(len(self.tyhjälist)):
-                    for j in range(len(torilist)):
-                        if 4<math.sqrt((torilist[j][0]-self.tyhjälist[i][0])**2+(torilist[j][1]-self.tyhjälist[i][1])**2)<8:
-                            mahdlist.append(self.tyhjälist[i])
-                torilist.append(mahdlist[random.randint(0,len(mahdlist)-1)])
-            for i in range(len(torilist)):
-                self.kartta[torilist[i][0]][torilist[i][1]] = self.aluli[20][0]
-                self.aluli[20].pop()            
+            print(len(self.aluli[20])//2-len(torilist))
+        for i in range(len(torilist)):
+            self.kartta[torilist[i][0]][torilist[i][1]] = self.aluli[20][0]
+            self.aluli[20].pop()
+            if self.aluli[20]==[]: return None
                                     
                      
     def ryhm(self):
@@ -591,12 +599,17 @@ class Kartta:
         escape=0
         while laske(self.aluli) != 0:
             if self.aluli[tyyp]==[]:tyyp = self.tyyppi(tyyp)
-            if tyyp == 40 or tyyp == 26:## Tarkistetaan vaatiiko aluetyyppi merta
-                if self.onkomer(x, y, 99):
+            if tyyp == 40 or tyyp == 26: ## Tarkistetaan vaatiiko aluetyyppi merta
+                if self.onkomer(x, y, 99)or self.onkomer(x, y, 40)or self.onkomer(x, y, 26):
                     pass
                 else:
-                    while not self.onkomer(x, y, 99):
+                    while not self.onkomer(x, y, 99)or self.onkomer(x, y, 40)or self.onkomer(x, y, 26):
+                        escape = escape+1
+                        if escape==10000:
+                            escape = 0
+                            break
                         x, y = self.suuntval()
+                        
             self.kartta[x][y] = self.aluli[tyyp][0]
             self.aluli[tyyp].pop()
             self.todmatputs()
@@ -688,14 +701,15 @@ class Kartta:
             test = []
             logtie.write('tyhmäsuuntval')
             for i in range(len(self.karttalist)):
-                if self.karttalist[i][2].tyyppinum == 20 and self.ympärtyh(self.karttalist[i][0],self.karttalist[i][1]):
-                    alklist.append([self.karttalist[i][0],self.karttalist[i][1]])
+                if self.karttalist[i][2].tyyppinum == 20:
+                    if self.ympärtyh(self.karttalist[i][0],self.karttalist[i][1]):
+                        alklist.append([self.karttalist[i][0],self.karttalist[i][1]])
             if alklist==[]:
                 s =random.randint(0, len(self.tyhjälist)-1)
                 return self.tyhjälist[s][0],self.tyhjälist[s][1]
             xa,ya = alklist[0]
             for i in range(len(self.tyhjälist)):
-                if math.sqrt((self.tyhjälist[i][0]-xa)**2+(self.tyhjälist[i][1]-ya)**2)<=7:
+                if math.sqrt((self.tyhjälist[i][0]-xa)**2+(self.tyhjälist[i][1]-ya)**2)<=3:
                     test.append(self.tyhjälist[i])
             if test == []:
                 test.append(self.tyhjälist[random.randint(0, len(self.tyhjälist)-1)])
