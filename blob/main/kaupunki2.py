@@ -412,11 +412,11 @@ class Kartta:
             self.kokluokorj=(10,15)
 
     def onkotilaa(self):
-        tyhjälist=self.tyhjät()
-        tilaa=len(tyhjälist)
+        tyhjalist=self.tyhjat()
+        tilaa=len(tyhjalist)
         if tilaa < laske(self.aluli):
             tarvitaan=laske(self.aluli)-tilaa
-            for j in range(math.ceil(tarvitaan/self.xkok)):
+            for j in range(math.ceil(tarvitaan/self.xkok)+2):
                 for i in range(len(self.kartta)):
                     self.kartta[i].extend([])
         
@@ -433,7 +433,7 @@ class Kartta:
                     koord.append([i, j])
         return koord
                 
-    def tyhjät(self):
+    def tyhjat(self):
         tyhj=[]
         for i in range(len(self.kartta)):
             for j in range(len(self.kartta[i])):
@@ -459,8 +459,8 @@ class Kartta:
     def mer(self):
         logtie.write('mer\n')
         x, y = 0,0
-        xraj=int(round(self.xkok/2,0))
-        yraj=int(round(self.ykok/2,0))
+        xraj=self.xkok//2
+        yraj=self.ykok//2
         if yraj<=3:yraj=4
         if xraj<=3:xraj=4
         meret=[]
@@ -484,7 +484,7 @@ class Kartta:
         merlist=[]
         joklis=[]
         summat=[]
-        välike=[]
+        valike=[]
         karttalist=self.karli()
         summaluku=0
         ymut=0
@@ -498,9 +498,9 @@ class Kartta:
         summat.sort(key=lambda x: x[0])
         summaluku= summat[0][0]
         while summat[0][0]==summaluku:
-            välike.append(summat.pop(0))
-        todte=random.randint(0, len(välike)-1)
-        x, y =karttalist[välike[todte][1]][0],karttalist[välike[todte][1]][1]
+            valike.append(summat.pop(0))
+        todte=random.randint(0, len(valike)-1)
+        x, y =karttalist[valike[todte][1]][0],karttalist[valike[todte][1]][1]
         while not((x==self.xkok)or(y==self.ykok)) :
             xmut =int(round((random.randint(*xvah))*(2/random.randint(1,self.ykok)),0))             
             ymut =int(round((random.randint(*yvah))*(4/random.randint(1,self.xkok)),0))
@@ -614,7 +614,7 @@ class Kartta:
             torilist=[]
             summat=[]
             todtest=0
-            tyhj=self.tyhjät()
+            tyhj=self.tyhjat()
             merlist=self.tyyppilista(99)
             for i in range(len(tyhj)):    
                 for j in range(len(merlist)):
@@ -643,7 +643,7 @@ class Kartta:
             districtlist=[]
             summat=[]
             todtest=0
-            tyhj=self.tyhjät()
+            tyhj=self.tyhjat()
             merlist=self.tyyppilista(99)
             for i in range(len(tyhj)):    
                 for j in range(len(merlist)):
@@ -675,7 +675,7 @@ class Kartta:
             self.aluli[tyyp].pop()
             self.todmatputs()
             x, y = self.suuntval(x, y)
-            typi = self.ympär(x, y, tyyp)
+            typi = self.ympar(x, y, tyyp)
             tyyp = self.tyyppi(typi)
             if tyyp == -3:
                 break
@@ -715,9 +715,9 @@ class Kartta:
                     break
         else: tyyp = a
         todyht = sum(self.tarktodmat[tyyp])
-        todnäk = random.randint(1,todyht)
+        todnak = random.randint(1,todyht)
         for tyyppi in range(len(self.tarktodmat[tyyp])):
-            if todnäk <= sum(self.tarktodmat[tyyp][:tyyppi+1]):
+            if todnak <= sum(self.tarktodmat[tyyp][:tyyppi+1]):
                 return tyyppi
      
     def onkomer(self, xa=-1, ya=-1, aa=99):
@@ -739,18 +739,18 @@ class Kartta:
         alklist=[]
         if xa == -1:
             karttalist=self.karli()
-            tyhjälist=self.tyhjät()
+            tyhjalist=self.tyhjat()
             test = []
             logtie.write('tyhmäsuuntval')
             for i in range(len(karttalist)):
                 if karttalist[i][2].tyyppinum == 20:
                     alklist.append([karttalist[i][0],karttalist[i][1]])
             xa,ya = alklist[0]
-            for i in range(len(tyhjälist)):
-                if math.sqrt((tyhjälist[i][0]-xa)**2+(tyhjälist[i][1]-ya)**2)<=12:
-                    test.append(tyhjälist[i])
+            for i in range(len(tyhjalist)):
+                if math.sqrt((tyhjalist[i][0]-xa)**2+(tyhjalist[i][1]-ya)**2)<=12:
+                    test.append(tyhjalist[i])
             if test == []:
-                test.append(tyhjälist[random.randint(0, len(tyhjälist)-1)])
+                test.append(tyhjalist[random.randint(0, len(tyhjalist)-1)])
             valmat = test
             if len(valmat)<=1: a = 0
             else: a = random.randint(0, len(valmat)-1)
@@ -768,19 +768,19 @@ class Kartta:
             if self.kartta[xa][ya-1] == []:
                 valmat.append([xa, ya-1])
         if valmat == []:
-            tyhjälist=self.tyhjät()
+            tyhjalist=self.tyhjat()
             test = []
-            for i in range(len(tyhjälist)):
-                if math.sqrt((tyhjälist[i][0]-xa)**2+(tyhjälist[i][1]-ya)**2)<12:
-                    test.append(tyhjälist[i])
+            for i in range(len(tyhjalist)):
+                if math.sqrt((tyhjalist[i][0]-xa)**2+(tyhjalist[i][1]-ya)**2)<12:
+                    test.append(tyhjalist[i])
             if test == []:
-                test.append(tyhjälist[random.randint(0, len(tyhjälist)-1)])
+                test.append(tyhjalist[random.randint(0, len(tyhjalist)-1)])
             valmat = test
         if len(valmat)<=1: a = 0
         else: a = random.randint(0, len(valmat)-1)
         return valmat[a][0], valmat[a][1]
 
-    def ympär(self, xa, ya, typ):
+    def ympar(self, xa, ya, typ):
         logtie.write('ympär\n')
         xm = self.xkok-1
         ym = self.ykok-1
