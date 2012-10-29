@@ -18,22 +18,22 @@ class Kaupunki:
     def __init__(self, nimi='', kok=0, asuk=0):
         self.nimi = nimi            #Kaupungin nimi
         self.kokluo = kok           # Kokoluokka
-        self.asmaa = asuk           # Asukasmäärä
-        self.asal = 0               # Asuinalueitten määrä   
+        self.asmaa = asuk           # Asukasmaara
+        self.asal = 0               # Asuinalueitten maara   
         self.alujak = []            # Alueitten jakomatriisi
         self.aluLohk = []           # Asuinalueet per lohko(mat,nat,kat)
         self.osadata = self.Kaupunginosat() # kaupunginosaluokka osadata:an
-        self.asudata = self.Aluedata() # Aluedata(hahmoluokat ja määrät) asudata:an
+        self.asudata = self.Aluedata() # Aluedata(hahmoluokat ja maarat) asudata:an
         self.alulis = []       # Aluelistan luonti
         self.matlohk = [0,0,0,0,0,0,0,0,0,0,0,0,0] # Matalantiheyden alueet
         self.natlohk = [0,0,0,0,0,0,0,0,0,0,0]     # Normaalitiheyden alueet 
         self.katlohk = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] # Korkeantiheyden
-        self.kokoLuokka()           # Tarkistetaan kokoluokka ja tarvittaessa pyydetään
-        self.asukasMaara()          # Luodaan asukasmäärä kokoluokan mukaan ja lasketaan alueitten määrä
+        self.kokoLuokka()           # Tarkistetaan kokoluokka ja tarvittaessa pyydetaan
+        self.asukasMaara()          # Luodaan asukasmaara kokoluokan mukaan ja lasketaan alueitten maara
         self.jakoTasot()            # Katsotaan kokoluokan mukainen jakomatriisi
         self.alueJako()             # Jaetaan alueet ryhmiin
-        self.alueet()               # Täytetään *lohk listat 
-        self.alulist()              # Täytetään alulist
+        self.alueet()               # Taytetaan *lohk listat 
+        self.alulist()              # Taytetaan alulist
         self.groundli=[self.Alue('ocean', "ocean", 99, 0, '~', -1),self.Alue('mountain', "mountain", 88, 0, 'M', -1),self.Alue('forest', "forest", 77, 0, 'F', -1)]
         
 
@@ -48,9 +48,9 @@ class Kaupunki:
     def kokVal(self):
         a = input("kokoluokka(1-6), 0 satunnainen")
         try:
-           val = int(a)
+            val = int(a)
         except ValueError:
-           a = 0
+            a = 0
         a = int(a)
         if a > 6:
             a = 6
@@ -64,7 +64,7 @@ class Kaupunki:
     def asukasMaara(self):
         if self.asmaa == 0:
                 ## Tarkistaa kaupungin kokoluokan ja palauttaa
-                ## asukamäärän
+                ## asukamaaran
             if self.kokluo == 1:   self.asmaa = random.randint(3000,6500)
             elif self.kokluo == 2: self.asmaa = random.randint(6501,9000)
             elif self.kokluo == 3: self.asmaa = random.randint(9001,20000)
@@ -73,11 +73,11 @@ class Kaupunki:
             elif self.kokluo == 6: self.asmaa = random.randint(250001,1000000)
         else:
 
-                ## Tarkistaa syötetyn asukasluvun pätevyyden ja korjaa kokoluokka virheen
+                ## Tarkistaa syötetyn asukasluvun patevyyden ja korjaa kokoluokka virheen
             if self.asmaa < 3000:
                 self.kokluo = 1
                 self.asmaa = random.randint(3000,6500)
-                print("Liian vähän asukkaita, korjattu\n")
+                print("Liian vahan asukkaita, korjattu\n")
             elif 3000 <= self.asmaa < 6501 and self.kokluo !=1: self.kokluo = 1
             elif 6501 <= self.asmaa < 9001 and self.kokluo !=2: self.kokluo = 2
             elif 9001 <= self.asmaa < 20001 and self.kokluo !=3: self.kokluo = 3
@@ -101,7 +101,6 @@ class Kaupunki:
         elif self.kokluo == 6: self.alujak = [35, 35, 30]
 
     def AsutusYht(self):
-        a = 0
         a = sum(self.aluLohk)
         return a
 
@@ -416,8 +415,8 @@ class Kartta:
             self.kokluokorj=(10,30)
 
     def onkotilaa(self):
-        tyhjälist=self.tyhjät()
-        tilaa=len(tyhjälist)
+        tyhjalist=self.tyhjat()
+        tilaa=len(tyhjalist)
         if tilaa < laske(self.aluli):
             tarvitaan=laske(self.aluli)-tilaa
             for j in range((tarvitaan//self.xkok)+3):
@@ -437,7 +436,7 @@ class Kartta:
                     koord.append([i, j])
         return koord
                 
-    def tyhjät(self):
+    def tyhjat(self):
         tyhj=[]
         for i in range(len(self.kartta)):
             for j in range(len(self.kartta[i])):
@@ -481,7 +480,7 @@ class Kartta:
     
     def mer(self):
         logtie.write('mer\n')
-        x, y = 0,0
+        x = 0
         xraj=int(round(self.xkok/2,0))
         yraj=int(round(self.ykok/2,0))
         if yraj<=3:yraj=4
@@ -501,15 +500,13 @@ class Kartta:
         for i in range(len(meret)):
             self.kartta[meret[i][0]][meret[i][1]]= self.groundli[0]
         
-
     def joki(self):
         logtie.write('joki\n')
         merlist=[]
         joklis=[]
         summat=[]
-        välike=[]
+        valike=[]
         karttalist=self.karli()
-        summaluku=0
         ymut=0
         xmut=0
         yvah = (-3, 6)
@@ -521,9 +518,9 @@ class Kartta:
         summat.sort(key=lambda x: x[0])
         summaluku= summat[0][0]
         while summat[0][0]==summaluku:
-            välike.append(summat.pop(0))
-        todte=random.randint(0, len(välike)-1)
-        x, y =karttalist[välike[todte][1]][0],karttalist[välike[todte][1]][1]
+            valike.append(summat.pop(0))
+        todte=random.randint(0, len(valike)-1)
+        x, y =karttalist[valike[todte][1]][0],karttalist[valike[todte][1]][1]
         while not((x==self.xkok)or(y==self.ykok)) :
             xmut =int(round((random.randint(*xvah))*(2/random.randint(1,self.ykok)),0))             
             ymut =int(round((random.randint(*yvah))*(4/random.randint(1,self.xkok)),0))
@@ -545,7 +542,6 @@ class Kartta:
 
     def joklisput(self,ind,suun,lis):
         teslis=[]
-        lisa = []
         if suun ==0:
             test=0
             for i in range(len(lis)):
@@ -627,7 +623,6 @@ class Kartta:
                         pallis[i]=[]
         return pallis
 
-
     def torit(self):
         logtie.write('torit\n')
         if len(self.aluli[20])==0:return None
@@ -635,8 +630,7 @@ class Kartta:
             mahdlist=[]
             torilist=[]
             summat=[]
-            todtest=0
-            tyhj=self.tyhjät()
+            tyhj=self.tyhjat()
             merlist=self.tyyppilista(99)
             for i in range(len(tyhj)):    
                 for j in range(len(merlist)):
@@ -663,9 +657,7 @@ class Kartta:
         else:
             mahdlist=[]
             districtlist=[]
-            summat=[]
-            todtest=0
-            tyhj=self.tyhjät()
+            tyhj=self.tyhjat()
             merlist=self.tyyppilista(99)
             for i in range(len(tyhj)):    
                 for j in range(len(merlist)):
@@ -678,12 +670,9 @@ class Kartta:
             for i in range(len(districtlist)):
                 self.kartta[districtlist[i][0]][districtlist[i][1]] = self.aluli[tyyp][0]
                 self.aluli[tyyp].pop()
-            
-                                    
-                     
+                             
     def ryhm(self):
         logtie.write('ryhm\n')
-        alklist=[]
         x, y = self.suuntval()
         self.todmatputs()
         tyyp = self.tyyppi()
@@ -692,14 +681,14 @@ class Kartta:
         c=4+random.randint(0,4)
         for alulaskuri in range(laske(self.aluli)):            
             if self.aluli[tyyp]==[]:
-                  print(tyyp)
-                  tyyp = self.tyyppi(tyyp)
+                print(tyyp)
+                tyyp = self.tyyppi(tyyp)
             if (type(x) or type(y) or type(tyyp))!=int:print('x'+str(x)+'y'+str(y)+'tyyp'+str(tyyp))
             self.kartta[x][y] = self.aluli[tyyp][0]
             self.aluli[tyyp].pop()
             self.todmatputs()
             x, y = self.suuntval(x, y)
-            typi = self.ympär(x, y, tyyp)
+            typi = self.ympar(x, y, tyyp)
             tyyp = self.tyyppi(typi)
             if tyyp == -3:
                 break
@@ -715,7 +704,6 @@ class Kartta:
                 x,y = self.suuntval()
             if laske(self.aluli)==0: break
                 
-
     def todmatputs(self):
         logtie.write('todmatputs\n')
         for i in range(len(self.aluli)):
@@ -742,9 +730,9 @@ class Kartta:
                     tyyp = i
                     break
         todyht = sum(self.tarktodmat[tyyp])
-        todnäk = random.randint(1,todyht)
+        todnak = random.randint(1,todyht)
         for tyyppi in range(len(self.tarktodmat[tyyp])):
-            if todnäk <= sum(self.tarktodmat[tyyp][:tyyppi+1]):
+            if todnak <= sum(self.tarktodmat[tyyp][:tyyppi+1]):
                 if type(tyyppi)!=int:print(tyyppi)
                 return tyyppi
      
@@ -757,17 +745,13 @@ class Kartta:
         return False
 
     def viertil(self, lista,dist):
-        tyhj=self.tyhjät()
+        tyhj=self.tyhjat()
         typmat = []
         for i in lista:
             for j in range(-dist,dist):
                 for k in range(-dist,dist):
                     if [i[0]+j,i[1]+k] in tyhj: typmat.append(i)
-        return typmat
-    
-        
-        
-          
+        return typmat     
                     
     def suuntval(self, xa=-1, ya=-1):
         logtie.write(str(xa)+str(ya)+'suuntval\n')
@@ -776,17 +760,16 @@ class Kartta:
         valmat = []
         if xa == -1:
             karttalist=self.karlikoordkaup()
-            tyhjälist=self.tyhjät()
+            tyhjalist=self.tyhjat()
             klist=self.tyyppilista(20)
             kula=self.viertil(klist,1)
-            test = []
-            logtie.write('tyhmäsuuntval')
+            logtie.write('tyhmasuuntval')
             if kula!=[]:
                 valmat.extend(kula)
             else:
                 kula=self.viertil(karttalist,4)
                 if kula !=[]:valmat.extend(kula)
-                else: valmat.append(random.choice(tyhjälist))
+                else: valmat.append(random.choice(tyhjalist))
             a = random.choice(valmat)
             return a[0],a[1]
         if xa+1 < xm:
@@ -802,21 +785,21 @@ class Kartta:
             if self.kartta[xa][ya-1] == []:
                 valmat.append([xa, ya-1])
         if valmat == []:
-            tyhjälist=self.tyhjät()
-            for i in range(len(tyhjälist)):
-                if math.sqrt((tyhjälist[i][0]-xa)**2+(tyhjälist[i][1]-ya)**2)<8:
-                    valmat.append(tyhjälist[i])
+            tyhjalist=self.tyhjat()
+            for i in range(len(tyhjalist)):
+                if math.sqrt((tyhjalist[i][0]-xa)**2+(tyhjalist[i][1]-ya)**2)<8:
+                    valmat.append(tyhjalist[i])
             else:
-                if len(tyhjälist)==1:valmat.append(tyhjälist[0])
-                elif tyhjälist==[]:pass
-                else:valmat.append(random.choice(tyhjälist))
+                if len(tyhjalist)==1:valmat.append(tyhjalist[0])
+                elif tyhjalist==[]:pass
+                else:valmat.append(random.choice(tyhjalist))
         print(valmat)
         a=random.choice(valmat)
         print(a)
         return a[0],a[1]
 
-    def ympär(self, xa, ya, typ):
-        logtie.write('ympär\n')
+    def ympar(self, xa, ya, typ):
+        logtie.write('ympar\n')
         xm = self.xkok-1
         ym = self.ykok-1
         typmat = []
@@ -905,7 +888,7 @@ class Kartta:
     def forest(self):
         forlist=[]
         karlist=self.karliei(99)
-        tyhj=self.tyhjät()
+        tyhj=self.tyhjat()
         for i in range(len(tyhj)):    
                 for j in range(len(karlist)):
                     if math.sqrt(4)<math.sqrt((karlist[j][0]-tyhj[i][0])**2+(karlist[j][1]-tyhj[i][1])**2)<math.sqrt(8):
@@ -951,7 +934,7 @@ def tutki(kaupma):
             print('Ulkona')
             pass
         elif mapp.kartta[x][y] == []:
-            print('Tyhjä')
+            print('Tyhja')
             pass
         else:print(mapp.kartta[x][y].tyyppi,mapp.kartta[x][y].nimi)
         
